@@ -3,11 +3,12 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var mongoose = require('mongoose');
 
 
 var indexRouter = require('./routes/index');
 var videoRouter = require('./routes/video');
-var alprdRouter = require('./routes/alprd');
+var alprRouter = require('./routes/alpr');
 
 var app = express();
 
@@ -23,9 +24,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+main().catch(err => console.log(err));
+
+async function main() {
+console.log("33")
+  await mongoose.connect('mongodb://root:rootpassword@localhost:27017')
+}
 app.use('/', indexRouter);
 app.use('/video', videoRouter);
-app.use('/alprd/', alprdRouter);
+app.use('/alpr/', alprRouter);
 
 app.use(function(req, res, next) {
   next(createError(404));
